@@ -1,35 +1,32 @@
-def analyze():
-    if request.method == 'POST':
 from flask import Flask, render_template, request, send_file
 from google_play_scraper import Sort, reviews
-import pandas as pd
-import numpy as np
-import matplotlib.pyplot as plt
-from wordcloud import WordCloud
-import nltk
-from nltk.corpus import stopwords
-from nltk.sentiment import SentimentIntensityAnalyzer
-import io
-import base64
-import seaborn as sns
-from sklearn.feature_extraction.text import TfidfVectorizer
-from sklearn.model_selection import train_test_split
-from sklearn.naive_bayes import MultinomialNB
-from sklearn.svm import SVC
-from sklearn.linear_model import LogisticRegression
-from sklearn.metrics import accuracy_score
 
 app = Flask(__name__)
-
 
 @app.route('/')
 def home():
     return render_template('index.html')
 
-
 @app.route('/analyze', methods=['POST'])
 def analyze():
     if request.method == 'POST':
+        import pandas as pd
+        import numpy as np
+        import matplotlib.pyplot as plt
+        from wordcloud import WordCloud
+        import nltk
+        from nltk.corpus import stopwords
+        from nltk.sentiment import SentimentIntensityAnalyzer
+        import io
+        import base64
+        import seaborn as sns
+        from sklearn.feature_extraction.text import TfidfVectorizer
+        from sklearn.model_selection import train_test_split
+        from sklearn.naive_bayes import MultinomialNB
+        from sklearn.svm import SVC
+        from sklearn.linear_model import LogisticRegression
+        from sklearn.metrics import accuracy_score
+
         app_id = request.form['app_id']
 
         result, continuation_token = reviews(
@@ -47,8 +44,7 @@ def analyze():
         data = data.rename(columns={'content': 'komentar', 'score': 'value'})
 
         data = data.dropna()
-        data['clean_text'] = data['komentar'].str.replace(
-            '[^\w\s]', '', regex=True)
+        data['clean_text'] = data['komentar'].str.replace('[^\w\s]', '', regex=True)
         data['clean_text'] = data['clean_text'].str.lower()
 
         nltk.download('stopwords')
@@ -59,8 +55,7 @@ def analyze():
 
         # Word Cloud
         all_text = ' '.join(data['clean_text'])
-        wordcloud = WordCloud(
-            width=1000, height=500, max_font_size=150, random_state=42).generate(all_text)
+        wordcloud = WordCloud(width=1000, height=500, max_font_size=150, random_state=42).generate(all_text)
         img = io.BytesIO()
         wordcloud.to_image().save(img, format='PNG')
         img.seek(0)
@@ -76,8 +71,7 @@ def analyze():
 
         # Sentiment Distribution Plot
         plt.figure(figsize=(8, 6))
-        sns.barplot(x=sentiment_counts.index,
-                    y=sentiment_counts.values, palette="viridis")
+        sns.barplot(x=sentiment_counts.index, y=sentiment_counts.values, palette="viridis")
         plt.title('Distribusi Sentimen')
         plt.xlabel('Sentimen')
         plt.ylabel('Jumlah')
@@ -100,8 +94,7 @@ def analyze():
 
         # TF-IDF Plot
         plt.figure(figsize=(8, 6))
-        sns.barplot(x=tfidf_top_words.values,
-                    y=tfidf_top_words.index, palette="viridis")
+        sns.barplot(x=tfidf_top_words.values, y=tfidf_top_words.index, palette="viridis")
         plt.title('Top 10 Kata dengan TF-IDF Tertinggi')
         plt.xlabel('Nilai TF-IDF')
         plt.ylabel('Kata')
