@@ -1,3 +1,5 @@
+import install_distutils
+install_distutils.install_distutils()
 from flask import Flask, render_template, request, send_file
 from google_play_scraper import Sort, reviews
 
