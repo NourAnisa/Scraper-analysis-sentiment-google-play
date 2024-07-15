@@ -1,4 +1,8 @@
+python3.12 -m ensurepip
+python3.12 -m pip install setuptools
+
 import subprocess
+
 
 def install_distutils():
     try:
