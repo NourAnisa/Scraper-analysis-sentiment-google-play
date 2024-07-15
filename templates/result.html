@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hasil Analisis Sentimen</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.10.21/css/jquery.dataTables.min.css">
+    <style>
+        table {
+            margin-top: 20px;
+        }
+        th, td {
+            text-align: left;
+            padding: 8px;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+    </style>
+</head>
+<body>
+    <div class="container mt-5">
+        <h1 class="text-center">Hasil Analisis Sentimen</h1>
+        <div class="text-center">
+            <img src="data:image/png;base64,{{ img_base64 }}" alt="Word Cloud" class="img-fluid mt-4">
+        </div>
+        <h2 class="mt-4">Jumlah Sentimen:</h2>
+        <ul class="list-group mt-2">
+            <li class="list-group-item">Positif: {{ sentiment_counts['positif'] }}</li>
+            <li class="list-group-item">Negatif: {{ sentiment_counts['negatif'] }}</li>
+            <li class="list-group-item">Netral: {{ sentiment_counts['netral'] }}</li>
+        </ul>
+        <h2 class="mt-4">Grafik Sentimen:</h2>
+        <div class="text-center">
+            <img src="data:image/png;base64,{{ img_graph_base64 }}" alt="Grafik Sentimen" class="img-fluid mt-4">
+        </div>
+        <h2 class="mt-4">Grafik TF-IDF:</h2>
+        <div class="text-center">
+            <img src="data:image/png;base64,{{ img_tfidf_base64 }}" alt="Grafik TF-IDF" class="img-fluid mt-4">
+        </div>
+        <h2 class="mt-4">Akurasi Model:</h2>
+        <ul class="list-group mt-2">
+            <li class="list-group-item">Naïve Bayes: {{ nb_accuracy }}</li>
+            <li class="list-group-item">Support Vector Machine: {{ svm_accuracy }}</li>
+            <li class="list-group-item">Logistic Regression: {{ lr_accuracy }}</li>
+            <li class="list-group-item">Lexicon-based: {{ lexicon_accuracy }}</li>
+        </ul>
+        <h2 class="mt-4">Data Scraper:</h2>
+        <table id="data-table" class="table table-bordered mt-3">
+            <thead>
+                <tr>
+                    <th>Komentar</th>
+                    <th>Nilai Sentimen</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for index, row in data.iterrows() %}
+                <tr>
+                    <td>{{ row['komentar'] }}</td>
+                    <td>{{ row['sentiment_label'] }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        <div class="text-center mt-4">
+            <a href="/download" class="btn btn-success">Unduh Data Komentar</a>
+        </div>
+        <div class="text-center mt-4">
+            <a href="/" class="btn btn-secondary">Kembali</a>
+        </div>
+    </div>
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.datatables.net/1.10.21/js/jquery.dataTables.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            $('#data-table').DataTable({
+                "pageLength": 20,
+                "lengthMenu": [20, 50, 100]
+            });
+        });
+    </script>
+</body>
+</html>
