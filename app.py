@@ -1,3 +1,5 @@
+def analyze():
+    if request.method == 'POST':
 from flask import Flask, render_template, request, send_file
 from google_play_scraper import Sort, reviews
 import pandas as pd
